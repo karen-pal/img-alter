@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import random
 
 
 def load_image(img_file):
@@ -64,11 +65,24 @@ def retouch(img_file):
     save_image(img, "retouch_"+img_file)
 
 
-mirror_image("mkultra.png", "diagonal_1")
-mirror_image("mkultra.png", "diagonal_2")
+def drag(img_file):
+    img = load_image(img_file)
+    lx, ly, color = img.shape
+
+    to_drag_x = random.randrange(255)
+    for i in range(lx):
+        for j in range(ly):
+            if i > to_drag_x:
+                img[i][j] = img[to_drag_x][j]
+    save_image(img, "drag_"+img_file)
+
+
+# mirror_image("mkultra.png", "diagonal_1")
+# mirror_image("mkultra.png", "diagonal_2")
 # mask_image("angery.jpg", "full")
 # mask_image("angery.jpg", "circle")
 # mask_image("angery.jpg", "rectangle")
-mirror_image("mkultra.png", "horizontal")
-mirror_image("mkultra.png", "vertical")
+# mirror_image("mkultra.png", "horizontal")
+# mirror_image("mkultra.png", "vertical")
 # retouch("angery.jpg")
+drag("mkultra.png")
