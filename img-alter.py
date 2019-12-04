@@ -68,14 +68,15 @@ def retouch(img_file):
 def drag(img_file, orientation):
     img = load_image(img_file)
     lx, ly, color = img.shape
+
     if orientation == "horizontal":
-        to_drag_x = random.randrange(255)
+        to_drag_x = lx - random.randrange(lx//2)
         for i in range(lx):
             for j in range(ly):
                 if i > to_drag_x:
                     img[i][j] = img[to_drag_x][j]
     elif orientation == "vertical":
-        to_drag_y = random.randrange(255)
+        to_drag_y = ly - random.randrange(ly // 2)
         for i in range(lx):
             for j in range(ly):
                 if j > to_drag_y:
@@ -84,13 +85,13 @@ def drag(img_file, orientation):
     save_image(img, "drag_"+orientation+img_file)
 
 
-# mirror_image("mkultra.png", "diagonal_1")
-# mirror_image("mkultra.png", "diagonal_2")
+# mirror_image("abel.jpg", "diagonal_1")
+# mirror_image("abel.jpg", "diagonal_2")
 # mask_image("angery.jpg", "full")
 # mask_image("angery.jpg", "circle")
 # mask_image("angery.jpg", "rectangle")
-# mirror_image("mkultra.png", "horizontal")
-# mirror_image("mkultra.png", "vertical")
+# mirror_image("abel.jpg", "horizontal")
+# mirror_image("abel.jpg", "vertical")
 # retouch("angery.jpg")
-drag("mkultra.png", "horizontal")
-drag("mkultra.png", "vertical")
+drag("abel.jpg", "horizontal")
+drag("abel.jpg", "vertical")
