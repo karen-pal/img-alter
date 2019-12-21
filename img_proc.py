@@ -10,24 +10,14 @@ class Executor:
         self.funcs = funcs
         self.image = image
 
-    def execute(self):
+    def execute(self, with_random):
         current_frame = self.image
         image_steps = []
         for func in self.funcs:
             for frame in range(self.frames):
-                progress = frame/self.frames
-                new_frame = func(current_frame, progress, self.frames)
-                image_steps.append(new_frame)
-                current_frame = new_frame
-        return image_steps
-
-    def execute_random(self):
-        current_frame = self.image
-        image_steps = []
-        for i in range(len(self.funcs)):
-            for frame in range(self.frames):
-                rnd_index = random.randrange(0, len(self.funcs))
-                func = self.funcs[rnd_index]
+                if with_random is True:
+                    rnd_index = random.randrange(0, len(self.funcs))
+                    func = self.funcs[rnd_index]
                 progress = frame/self.frames
                 new_frame = func(current_frame, progress, self.frames)
                 image_steps.append(new_frame)
@@ -70,7 +60,7 @@ def drag_horiz(image, progress, frames):
 funcs = [mirror_diagonal_1, drag_vert]
 im = Image.open(sys.argv[1])
 
-images_array = Executor(funcs, im, 10).execute_random()
+images_array = Executor(funcs, im, 10).execute(False)
 tmp = images_array.copy()
 images_array.reverse()
 tmp += images_array
