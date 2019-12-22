@@ -19,9 +19,7 @@ def mirror_image(img, progress, direction):
                 if i < j and progress > 0:
                     img[i][j] = img[j % (int(lx*progress)%lx)][i %(int(ly*progress)%ly)]
             elif direction == "diagonal_2":
-                if i > j and progress>0:
-                    # print(progress)
-                    # print(i,j)
+                if i > j and progress > 0:
                     img[i][j] = img[j % (int(lx*progress)%lx)][i% (int(ly*progress)%ly)]
 
     return Image.fromarray(img)
@@ -55,4 +53,25 @@ def drag(img, progress, orientation):
             for j in range(ly):
                 if j > to_drag_y:
                     img[i][j] = img[i][int(to_drag_y*progress)]
+    return Image.fromarray(img)
+
+
+# definir que intervalos de pixeles modificar
+# modificarlos
+def pixelsorting(img, progress):
+    img = np.array(img)
+    lx, ly, color = img.shape
+
+    #select pixels to sort
+    to_sort = []
+    for i in range(lx):
+        if i%2==0 and i%4==0:
+            x_pos = (i * random.randrange(lx)) % lx
+            to_sort.append([img[int(x_pos*progress)], x_pos])
+    #sort and modify the image
+    for i in range(len(to_sort)):
+        pixel = np.sort(to_sort[i][0])
+        x = to_sort[i][1]
+        img[x] = pixel
+
     return Image.fromarray(img)
