@@ -1,5 +1,6 @@
 from imgalter import mirror_image, drag, retouch
 from PIL import Image
+import click
 import random
 import sys
 
@@ -58,10 +59,22 @@ def drag_horiz(image, progress, frames):
 
 
 funcs = [mirror_diagonal_1, drag_vert]
-im = Image.open(sys.argv[1])
 
-images_array = Executor(funcs, im, 10).execute(False)
-tmp = images_array.copy()
-images_array.reverse()
-tmp += images_array
-tmp[0].save(sys.argv[2], save_all=True, append_images=tmp[1:], duration=95, loop=0)
+@click.command()
+@click.argument('in_file', required=1, type=click.Path(exists=True))
+@click.option('--randomize', default=True, help='randomize the transformations order, True by default. Set to False for running in order')
+@click.argument('out_file', type=click.Path())
+
+def main(in_file, with_random, out_file):
+    im = Image.open(click.format_filename(in_file))
+
+
+    images_array = Executor(funcs, im, 10).execute(randomize)
+    tmp = images_array.copy()
+    images_array.reverse()
+    tmp += images_array
+
+    tmp[0].save(click.format_filename(out_file), save_all=True, append_images=tmp[1:], duration=95, loop=0)
+
+if __name__ == '__main__':
+    main()
