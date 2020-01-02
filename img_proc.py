@@ -29,9 +29,6 @@ class Executor:
 def pixsort(image,progress,frames):
     return pixelsorting(image,progress)
 
-def rots(image, progress, frames):
-    return image.rotate(progress*(90//frames))
-
 
 def mirror_diagonal_2(image, progress, frames):
     return mirror_image(image, progress, "diagonal_2")
@@ -61,7 +58,7 @@ def drag_horiz(image, progress, frames):
     return drag(image, progress, "horizontal")
 
 
-funcs = [pixsort]
+funcs = [pixsort, drag_vert, mirror_diagonal_2, pixsort, mirror_vert, pixsort]
 
 @click.command()
 @click.argument('in_file', required=1, type=click.Path(exists=True))
@@ -69,10 +66,10 @@ funcs = [pixsort]
 @click.argument('out_file', type=click.Path())
 
 def main(in_file, randomize, out_file):
-    im = Image.open(click.format_filename(in_file))
-
-
-    images_array = Executor(funcs, im, 30).execute(randomize)
+    img = Image.open(click.format_filename(in_file))
+    im = img.convert('RGB')
+    frames = 15
+    images_array = Executor(funcs, im, frames).execute(randomize)
     tmp = images_array.copy()
     images_array.reverse()
     tmp += images_array
