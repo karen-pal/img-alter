@@ -6,21 +6,26 @@ import random
 def mirror_image(image, progress, direction):
     img = np.array(image)
     lx, ly, color = img.shape
-
     for i in range(lx):
         for j in range(ly):
             if direction == "vertical":
                 if j > ly//2:
-                    img[i][j] = img[i][int((j-ly)*progress)//2]
+                    img[i][j] = img[int(j//2-(j-ly)*progress)%lx][i%ly]
+                if i<lx//2:
+                    img[i][j] =img[int((lx-i))%lx][j]
             elif direction == "horizontal":
                 if i > lx//2:
-                    img[i][j] = img[int((i-lx)*progress)//2][j]
+                    img[i][j] = img[j%lx][int(i//2-(i-lx)*progress)%ly]
+                else:
+                    img[i][j] = img[(ly-i)%lx][j]
             elif direction == "diagonal_1":
-                if i < j and progress > 0.7:
-                    img[i][j] = img[j % (int(lx*progress)%lx)][i %(int(ly*progress)%ly)]
+                if i < j and progress == (13/15):
+                    #img[i][j] = img[j % (int(lx*progress)%lx)][i %(int(ly*progress)%ly)]
+                    img[i][j]=img[int(j*progress)%lx][int(i*progress)%ly]
             elif direction == "diagonal_2":
                 if i > j and progress > 0.7:
                     img[i][j] = img[j % (int(lx*progress)%lx)][i% (int(ly*progress)%ly)]
+                    img[i][j]=img[int(j**progress)%lx][int(i**progress)%ly]
 
     return Image.fromarray(img)
 
@@ -62,13 +67,22 @@ def pixelsorting(image, progress):
 
     #select pixels to sort
     to_sort = []
+    # to_sort[i][0] pixeles de img[i][rnmd]
+    # to_sort[i][j] posicion en la imagen original
+
     for i in range(lx):
         if i%2==0 and i%4==0 and i%6==0 and i%8==0:
-            x_pos = (i * random.randrange(lx)) % lx
+            #x_pos = (i * random.randrange(lx)) % lx
+            x_pos = int(((i * random.randrange(lx)) % lx) ** progress*10)%lx
+            # x_pos = int(((i * random.randrange(lx)) % lx) * (lx-progress))%lx
             to_sort.append([img[int(x_pos*progress)], x_pos])
     #sort and modify the image
     for i in range(len(to_sort)):
-        pixel = np.sort(to_sort[i][0])
+        if i%2==0:
+            pixel = -np.sort(-to_sort[i][0])
+        else:
+            pixel = np.sort(to_sort[i][0])
+
         x = to_sort[i][1]
         img[x] = pixel
 
