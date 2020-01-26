@@ -50,13 +50,13 @@ def drag(image, progress, orientation):
         to_drag_x = lx - random.randrange(lx//2)
         for i in range(lx):
             for j in range(ly):
-                if i > to_drag_x:
+                if i > to_drag_x and i%2==0:
                     img[i][j] = img[int(to_drag_x*progress)][j]
     elif orientation == "vertical":
         to_drag_y = ly - random.randrange(ly // 2)
         for i in range(lx):
             for j in range(ly):
-                if j > to_drag_y:
+                if j > to_drag_y and j%2==0:
                     img[i][j] = img[i][int(to_drag_y*progress)]
     return Image.fromarray(img)
 
