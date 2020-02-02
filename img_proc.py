@@ -1,4 +1,4 @@
-from imgalter import mirror_image, drag, retouch, pixelsorting
+from imgalter import mirror_image, drag, retouch, pixelsorting, text_insert
 from PIL import Image
 import click
 import random
@@ -57,8 +57,9 @@ def drag_vert(image, progress, frames):
 def drag_horiz(image, progress, frames):
     return drag(image, progress, "horizontal")
 
-
-funcs = [pixsort, drag_vert, mirror_diagonal_2, pixsort, mirror_vert, pixsort]
+def write_text(image,progress,frames):
+    return text_insert(image, progress, frames)
+funcs = [write_text]
 
 @click.command()
 @click.argument('in_file', required=1, type=click.Path(exists=True))
@@ -68,13 +69,13 @@ funcs = [pixsort, drag_vert, mirror_diagonal_2, pixsort, mirror_vert, pixsort]
 def main(in_file, randomize, out_file):
     img = Image.open(click.format_filename(in_file))
     im = img.convert('RGB')
-    frames = 15
+    frames = 20
     images_array = Executor(funcs, im, frames).execute(randomize)
     tmp = images_array.copy()
     images_array.reverse()
     tmp += images_array
 
-    tmp[0].save(click.format_filename(out_file), save_all=True, append_images=tmp[1:], duration=95, loop=0)
+    tmp[0].save(click.format_filename(out_file), save_all=True, append_images=tmp[0:], duration=95, loop=0)
 
 if __name__ == '__main__':
     main()

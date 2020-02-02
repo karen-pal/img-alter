@@ -1,7 +1,29 @@
 from PIL import Image
+import PIL.ImageDraw as ImageDraw
+import PIL.ImageFont as ImageFont
 import numpy as np
 import random
 
+
+#def get_text_to_draw(progress):
+#    for i in range(frames*progress):
+
+
+def text_insert(image,progress,frames):
+    font_fname = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
+    font_size = 50
+    unicode_text =u"def text_insert(image,progress,frames): font_fname = /usr/share/fonts/truetype/freefont/FreeMono.ttf font_size = 200 font = ImageFont.truetype(font_fname, font_size, encoding=unic) img = np.array(image) lx,ly,color= img.shape image0 = Image.fromarray(img) draw = ImageDraw.Draw(image0) text_to_draw=unicode_text[int(frames*progress)%len(unicode_text)] draw.text((random.randrange(lx), random.randrange(ly)), text_to_draw, blue, font=font) print(frames*progress, text_to_draw) return image0"
+    font = ImageFont.truetype(font_fname, font_size, encoding="unic")
+
+    img = np.array(image)
+    lx,ly,color= img.shape
+    image0 = Image.fromarray(img)
+    draw = ImageDraw.Draw(image0)
+    start = random.randrange((int(frames*progress)%len(unicode_text))+1)
+    text_to_draw=unicode_text[start:start*random.randrange(frames*progress+1)]
+    draw.text((random.randrange(lx), random.randrange(ly)), text_to_draw, 'black', font=font)
+    print(text_to_draw)
+    return image0
 
 def mirror_image(image, progress, direction):
     img = np.array(image)
@@ -19,9 +41,9 @@ def mirror_image(image, progress, direction):
                 else:
                     img[i][j] = img[(ly-i)%lx][j]
             elif direction == "diagonal_1":
-                if i < j and progress == (13/15):
-                    #img[i][j] = img[j % (int(lx*progress)%lx)][i %(int(ly*progress)%ly)]
-                    img[i][j]=img[int(j*progress)%lx][int(i*progress)%ly]
+                if i < j  and progress > (2/15):
+                    img[i][j] = img[j % (int(lx*progress)%lx)][i %(int(ly*progress)%ly)]
+                    #img[i][j]=img[int(j*progress)%lx][int(i*progress)%ly]
             elif direction == "diagonal_2":
                 if i > j and progress > 0.7:
                     img[i][j] = img[j % (int(lx*progress)%lx)][i% (int(ly*progress)%ly)]
@@ -50,13 +72,13 @@ def drag(image, progress, orientation):
         to_drag_x = lx - random.randrange(lx//2)
         for i in range(lx):
             for j in range(ly):
-                if i > to_drag_x and i%2==0:
+                if abs(i-to_drag_x)>int(lx*.2) and i%2==0:
                     img[i][j] = img[int(to_drag_x*progress)][j]
     elif orientation == "vertical":
         to_drag_y = ly - random.randrange(ly // 2)
         for i in range(lx):
             for j in range(ly):
-                if j > to_drag_y and j%2==0:
+                if abs(j-to_drag_y)>int(ly*.2)  and j%2==0:
                     img[i][j] = img[i][int(to_drag_y*progress)]
     return Image.fromarray(img)
 
