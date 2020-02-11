@@ -12,17 +12,23 @@ import random
 def text_insert(image,progress,frames):
     font_fname = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
     font_size = 50
-    unicode_text =u"def text_insert(image,progress,frames): font_fname = /usr/share/fonts/truetype/freefont/FreeMono.ttf font_size = 200 font = ImageFont.truetype(font_fname, font_size, encoding=unic) img = np.array(image) lx,ly,color= img.shape image0 = Image.fromarray(img) draw = ImageDraw.Draw(image0) text_to_draw=unicode_text[int(frames*progress)%len(unicode_text)] draw.text((random.randrange(lx), random.randrange(ly)), text_to_draw, blue, font=font) print(frames*progress, text_to_draw) return image0"
+    signature =u"def text_insert(image,progress,frames):"
+    fonts= u"font_fname = /usr/share/fonts/truetype/freefont/FreeMono.ttf font_size = 200 font = ImageFont.truetype(font_fname, font_size, encoding=unic)"
+    imgarray=u"img = np.array(image) lx,ly,color= img.shape image0 = Image.fromarray(img)"
+    drawing=u"draw = ImageDraw.Draw(image0) text_to_draw=unicode_text[int(frames*progress)%len(unicode_text)]"
+    drawingtext=u"draw.text((random.randrange(lx), random.randrange(ly)), text_to_draw, blue, font=font)"
+    the_return=u"return image0"
+    unicode_text = [fonts,imgarray,drawing,drawingtext,the_return]
+    chunks = len(unicode_text)
     font = ImageFont.truetype(font_fname, font_size, encoding="unic")
-
+    random_chunk = random.randrange(int(frames*progress)%chunks+1)
     img = np.array(image)
     lx,ly,color= img.shape
     image0 = Image.fromarray(img)
     draw = ImageDraw.Draw(image0)
     start = random.randrange((int(frames*progress)%len(unicode_text))+1)
-    text_to_draw=unicode_text[start:start*random.randrange(frames*progress+1)]
-    draw.text((random.randrange(lx), random.randrange(ly)), text_to_draw, 'black', font=font)
-    print(text_to_draw)
+    text_to_draw=unicode_text[random_chunk][start:start*random.randrange(int(frames*progress)+10)]
+    draw.text((random.randrange(lx), random.randrange(ly)), text_to_draw, 'red', font=font)
     return image0
 
 def mirror_image(image, progress, direction):

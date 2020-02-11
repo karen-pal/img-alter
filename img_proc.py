@@ -59,7 +59,8 @@ def drag_horiz(image, progress, frames):
 
 def write_text(image,progress,frames):
     return text_insert(image, progress, frames)
-funcs = [write_text]
+
+funcs = [write_text,write_text,drag_horiz]
 
 @click.command()
 @click.argument('in_file', required=1, type=click.Path(exists=True))
@@ -69,7 +70,7 @@ funcs = [write_text]
 def main(in_file, randomize, out_file):
     img = Image.open(click.format_filename(in_file))
     im = img.convert('RGB')
-    frames = 20
+    frames = 35
     images_array = Executor(funcs, im, frames).execute(randomize)
     tmp = images_array.copy()
     images_array.reverse()
